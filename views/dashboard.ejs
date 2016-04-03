@@ -44,7 +44,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Project name</a>
+            <a class="navbar-brand" href="#">La Vie D'or</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
@@ -83,8 +83,11 @@
             </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Dashboard</h1>
+
             <div class="table-responsive">
                 <table class="table table-striped">
+                    <thead>
                     <tr>
                         <% for (var floor = 5; floor <= 19; floor++) {
                             if (floor == 13) {
@@ -93,6 +96,7 @@
                         <th colspan="2" align="center"><%= floor %>F</th>
                         <% } %>
                     </tr>
+                    </thead>
                     <% for (var roomNumber = 1; roomNumber <= 26; roomNumber++) { %>
                     <tr>
                         <% for (var floor = 5; floor <= 19; floor++) {
@@ -101,192 +105,99 @@
                             if (floor == 13) {
                                 continue;
                             }
-                        if (floor == 5 || floor == 19) {
-                        if (roomNumber > 17) { %>
+                        if (((floor == 5 || floor == 19) && roomNumber > 17)
+                                || (floor >= 7 && floor <= 18) && roomNumber > 19) { %>
                         <td></td>
                         <td></td>
-                        <%
-                        } else { %>
-                        <td><%= floor + tempRoomNumber %></td>
-                        <td>이름</td>
-                        <% }
-                        } else if (floor >= 7 && floor <= 18) {
-                        if (roomNumber > 19) { %>
-                        <td></td>
-                        <td></td>
-                        <%
-                        } else { %>
-                        <td><%= floor + tempRoomNumber %></td>
-                        <td>이름</td>
-                        <% }
-                        } else { %>
-                        <td><%= floor + tempRoomNumber %></td>
-                        <td>이름</td>
+                        <% } else { %>
+                        <td onclick="openModal(<%= floor + tempRoomNumber %>);">
+                            <%= floor + tempRoomNumber %>
+                        </td>
+                        <td onclick="openModal();">
+                            이름
+                        </td>
                         <% }
                         } %>
                     </tr>
                     <% } %>
                 </table>
             </div>
+            <h2 class="sub-header">Section title</h2>
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-            <h1 class="page-header">Dashboard</h1>
+    </div>
+</div>
 
-            <div class="row placeholders">
-                <div class="col-xs-6 col-sm-3 placeholder">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                         width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
-                </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                         width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
-                </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                         width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
-                </div>
-                <div class="col-xs-6 col-sm-3 placeholder">
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw=="
-                         width="200" height="200" class="img-responsive" alt="Generic placeholder thumbnail">
-                    <h4>Label</h4>
-                    <span class="text-muted">Something else</span>
+<script>
+    function openModal(roomNumber) {
+        $("#modalRoomNumber").text(roomNumber);
+        $("#inputModal").modal("show");
+
+    }
+</script>
+
+<!-- Input Modal  -->
+<div class="input-modal modal fade" id="inputModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
                 </div>
             </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <!-- Project Details Go Here -->
+                        <h2 id="modalRoomNumber">Room Number</h2>
 
-            <h2 class="sub-header">Section title</h2>
+                        <form>
+                            <div class="form-group">
+                                <input class="form-control" type="text" name="name" placeholder="이름" required
+                                       data-validation-required-message="Please enter room name."/>
 
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                        <th>Header</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>1,001</td>
-                        <td>Lorem</td>
-                        <td>ipsum</td>
-                        <td>dolor</td>
-                        <td>sit</td>
-                    </tr>
-                    <tr>
-                        <td>1,002</td>
-                        <td>amet</td>
-                        <td>consectetur</td>
-                        <td>adipiscing</td>
-                        <td>elit</td>
-                    </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>Integer</td>
-                        <td>nec</td>
-                        <td>odio</td>
-                        <td>Praesent</td>
-                    </tr>
-                    <tr>
-                        <td>1,003</td>
-                        <td>libero</td>
-                        <td>Sed</td>
-                        <td>cursus</td>
-                        <td>ante</td>
-                    </tr>
-                    <tr>
-                        <td>1,004</td>
-                        <td>dapibus</td>
-                        <td>diam</td>
-                        <td>Sed</td>
-                        <td>nisi</td>
-                    </tr>
-                    <tr>
-                        <td>1,005</td>
-                        <td>Nulla</td>
-                        <td>quis</td>
-                        <td>sem</td>
-                        <td>at</td>
-                    </tr>
-                    <tr>
-                        <td>1,006</td>
-                        <td>nibh</td>
-                        <td>elementum</td>
-                        <td>imperdiet</td>
-                        <td>Duis</td>
-                    </tr>
-                    <tr>
-                        <td>1,007</td>
-                        <td>sagittis</td>
-                        <td>ipsum</td>
-                        <td>Praesent</td>
-                        <td>mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,008</td>
-                        <td>Fusce</td>
-                        <td>nec</td>
-                        <td>tellus</td>
-                        <td>sed</td>
-                    </tr>
-                    <tr>
-                        <td>1,009</td>
-                        <td>augue</td>
-                        <td>semper</td>
-                        <td>porta</td>
-                        <td>Mauris</td>
-                    </tr>
-                    <tr>
-                        <td>1,010</td>
-                        <td>massa</td>
-                        <td>Vestibulum</td>
-                        <td>lacinia</td>
-                        <td>arcu</td>
-                    </tr>
-                    <tr>
-                        <td>1,011</td>
-                        <td>eget</td>
-                        <td>nulla</td>
-                        <td>Class</td>
-                        <td>aptent</td>
-                    </tr>
-                    <tr>
-                        <td>1,012</td>
-                        <td>taciti</td>
-                        <td>sociosqu</td>
-                        <td>ad</td>
-                        <td>litora</td>
-                    </tr>
-                    <tr>
-                        <td>1,013</td>
-                        <td>torquent</td>
-                        <td>per</td>
-                        <td>conubia</td>
-                        <td>nostra</td>
-                    </tr>
-                    <tr>
-                        <td>1,014</td>
-                        <td>per</td>
-                        <td>inceptos</td>
-                        <td>himenaeos</td>
-                        <td>Curabitur</td>
-                    </tr>
-                    <tr>
-                        <td>1,015</td>
-                        <td>sodales</td>
-                        <td>ligula</td>
-                        <td>in</td>
-                        <td>libero</td>
-                    </tr>
-                    </tbody>
-                </table>
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="date" placeholder="체크인" required
+                                       data-validation-required-message="Please enter check-in date"/>
+
+                                <p class="help-block text-danger"></p>
+                                <input class="form-control" type="date" placeholder="체크아웃" required
+                                       data-validation-required-message="Please enter check-out date">
+
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="price" placeholder="단가" required
+                                       data-validation-required-message="Please enter room price"/>
+
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="amount" placeholder="개수" required
+                                       data-validation-required-message="Please enter room amount"/>
+
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" type="number" name="number"
+                                       placeholder="번호 (개수에 따라 번호 입력 란 증가되도록)" required
+                                       data-validation-required-message="Please enter room number"/>
+
+                                <p class="help-block text-danger"></p>
+                            </div>
+                            <div class="form-group">
+                                <textarea class="form-control" name="note" placeholder="특이사항"></textarea>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div class="col-lg-12 text-center">
+                                <input class="btn btn-primary" type="submit" data-dismiss="modal"/>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
