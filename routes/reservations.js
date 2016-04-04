@@ -5,15 +5,54 @@
 var express = require('express');
 var mongoose = require('../lib/mongoose');
 var co = require('co');
+var reservationModel = require('../model/reservation');
 var router = express.Router();
 
+// 모든 예약 정보 가져오기
 router.get('/', function (req, res, next) {
+
+    var query;
+    query.archive = false;
+    var options = {};
+
+    reservationModel.getReservations(query, options, function (err, reservation) {
+        if (err) {
+            warn(err);
+            res.json(error.getError());
+            return;
+        }
+        refine(reservation, function (err, reservations) {
+            if (err) {
+                warn(err);
+                res.json(error.getError());
+                return;
+            }
+            res.json(error.getSucceed({
+                reservations: reservations
+            }));
+        });
+
+        function refine(reservation, cb) {
+            async.parallel(function (err, results) {
+                if (err) {
+                    cb(err);
+                }
+                var reservations = _.map(reservation, function (r) {
+                    r.startDate = "";
+                    r.endDate = "";
+                    r.amount = 0;
+                });
+                return r;
+            });
+            cb(null, reservation);
+        }
+    });
+
+    //
     res.render('reservations', {title: 'Express'});
 });
 
-/*
- * 회원 가입을 실시합니다.
- */
+// 예약 넣기
 router.post('/book', function (req, res) {
     var body = req.body;
 
@@ -49,9 +88,9 @@ router.post('/book', function (req, res) {
         details: details,
         note: note,
         isCheckedId: isCheckedIn,
-        isCheckedOut: false,
+        isCheckedOut: isCheckedOut,
         isCleaned: isCleaned,
-        isRemoved: false
+        isRemoved: isRemoved
     };
 
     co(function * ()
@@ -71,7 +110,7 @@ router.post('/book', function (req, res) {
 
 function createReservation(reservation) {
     return new Promise(function (resolve, reject) {
-        mongoose.Reservation.create(reservation, function (err, insert) {
+        reservationModel.create(reservation, function (err, insert) {
             if (err) {
                 reject(err);
             } else {
