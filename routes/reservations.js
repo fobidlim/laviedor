@@ -12,7 +12,6 @@ var router = express.Router();
 router.get('/', function (req, res, next) {
 
     var query;
-    query.archive = false;
     var options = {};
 
     reservationModel.getReservations(query, options, function (err, reservation) {
@@ -38,6 +37,7 @@ router.get('/', function (req, res, next) {
                     cb(err);
                 }
                 var reservations = _.map(reservation, function (r) {
+                    r.name = "";
                     r.startDate = "";
                     r.endDate = "";
                     r.amount = 0;
@@ -56,6 +56,7 @@ router.get('/', function (req, res, next) {
 router.post('/book', function (req, res) {
     var body = req.body;
 
+    var name = body['name'];
     var startDate = body['startDate'];
     var endDate = body['endDate'];
     var amount = body['amount'];
@@ -82,6 +83,7 @@ router.post('/book', function (req, res) {
 //}
 
     var reservationForm = {
+        name: name,
         startDate: startDate,
         endDate: endDate,
         amount: amount,

@@ -11,7 +11,6 @@ exports.Reservation = Reservation;
 
 
 function getReservations(query, options, cb) {
-    query.archive = false;
     var queryData = Reservation.find(query);
     if (options.sort) {
         queryData.sort(options.sort);
