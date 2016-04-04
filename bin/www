@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+global.config = require('../config/default.json');
 
 /**
  * Module dependencies.
