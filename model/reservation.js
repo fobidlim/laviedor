@@ -10,12 +10,23 @@ var Reservation = mongoose.Reservation;
 exports.Reservation = Reservation;
 
 
-function getReservations(query, options, cb) {
-    var queryData = Reservation.find();
+function getAllReservations(cb) {
+    var query = {
+        isRemoved: false
+    };
+    var queryData = Reservation.find(query).sort({roomNumber: -1});
 
     queryData.lean().exec(function (err, reservations) {
         cb(err, err ? null : reservations);
     });
 }
 
-exports.getReservations = getReservations;
+function getReservations(query, options, cb) {
+    var queryData = Reservation.find(query).sort({roomNumber: -1});
+
+    queryData.lean().exec(function (err, reservations) {
+        cb(err, err ? null : reservations);
+    });
+}
+
+exports.getReservations = getAllReservations;

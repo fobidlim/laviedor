@@ -31,10 +31,44 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <script src="/javascripts/reservation.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
 </head>
 <body>
 <% include template/top.ejs %>
 
+<script>
+    $(function () {
+        $.get('/reservations/list', function (res) {
+            console.log('code: ' + res.codeno);
+            console.log(res);
+
+            for (var i in res.data.reservations) {
+                console.log('roomNumber: '+res.data.reservations[i].roomNumber);
+
+                $('#roomNumber-' + res.data.reservations[i].roomNumber).text(res.data.reservations[i].name);
+            }
+        });
+
+//        $.ajax({
+//            method: "GET",
+//            url: "reservations/list",
+//            dataType: 'json',
+//            success: function (results) {
+//                console.log('code: ' + results.code);
+//                console.log('results: ' + results);
+//
+//                for (var i in results.data) {
+//                    $('#roomNumber-' + results.data[i].roomNumber).text(results.data[i].name);
+//                }
+//            }, error: function (err) {
+//                alert(err);
+//            }
+//        });
+    });
+
+</script>
 <div class="container-fluid">
     <div class="row">
         <% include template/left.ejs %>
@@ -54,24 +88,24 @@
                         <% } %>
                     </tr>
                     </thead>
-                    <% for (var roomNumber = 1; roomNumber <= 26; roomNumber++) { %>
+                    <% for (var number = 1; number <= 26; number++) { %>
                     <tr>
                         <% for (var floor = 5; floor <= 19; floor++) {
-                            var tempRoomNumber = roomNumber < 10 ? "0" + roomNumber : "" + roomNumber;
+                            var tempNumber = number < 10 ? "0" + number : "" + number;
+                            var roomNumber = floor + tempNumber + "";
 
                             if (floor == 13) {
                                 continue;
                             }
-                        if (((floor == 5 || floor == 19) && roomNumber > 17)
-                                || (floor >= 7 && floor <= 18) && roomNumber > 19) { %>
+                        if (((floor == 5 || floor == 19) && number > 17)
+                                || (floor >= 7 && floor <= 18) && number > 19) { %>
                         <td></td>
                         <td></td>
                         <% } else { %>
-                        <td onclick="openModal(<%= floor + tempRoomNumber %>);">
-                            <%= floor + tempRoomNumber %>
+                        <td onclick="openModal(<%= roomNumber %>);">
+                            <%= roomNumber %>
                         </td>
-                        <td onclick="openModal();">
-                            <%= reservations[0].name %>
+                        <td id="roomNumber-<%= roomNumber %>" onclick="openModal();">
                         </td>
                         <% }
                         } %>
@@ -165,8 +199,6 @@
 <!-- Bootstrap core JavaScript
 ================================================== -->
 <!-- Placed at the end of the document so the pages load faster -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
 <script src="/dist/js/bootstrap.min.js"></script>
 <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
 <script src="/assets/js/vendor/holder.min.js"></script>

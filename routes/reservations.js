@@ -15,10 +15,29 @@ var router = express.Router();
 // 모든 예약 정보 가져오기
 router.get('/', function (req, res, next) {
 
-    var query;
-    var options = {};
+    //reservationModel.getReservations(function (err, reservations) {
+    //    if (err) {
+    //        warn(err);
+    //        res.json(error.getError());
+    //        return;
+    //    }
+    //
+    //    if (err) {
+    //        warn(err);
+    //        res.json(error.getError());
+    //        return;
+    //    }
+    //    res.json(error.getSucceed({
+    //        reservations: reservations
+    //    }));
+    //});
 
-    reservationModel.getReservations(query, options, function (err, reservations) {
+    res.render('reservations');
+
+});
+
+router.get('/list', function (req, res, next) {
+    reservationModel.getReservations(function (err, reservations) {
         if (err) {
             warn(err);
             res.json(error.getError());
@@ -31,43 +50,13 @@ router.get('/', function (req, res, next) {
             return;
         }
 
-        //console.log(reservations);
-        //
-        res.render('reservations', {'reservations': reservations});
+        console.log(reservations);
 
-        //res.json(error.getSucceed({
-        //    reservations: reservations
-        //}));
+        res.json(error.getSucceed({
+            reservations: reservations
+        }));
 
-        //refine(reservation, function (err, reservations) {
-        //    if (err) {
-        //        warn(err);
-        //        res.json(error.getError());
-        //        return;
-        //    }
-        //
-        //    //return res.render('reservations', {reservations: reservations});
-        //
-        //    res.json(error.getSucceed({
-        //        reservations: reservations
-        //    }));
-        //});
-
-        function refine(reservation, cb) {
-            async.parallel(null, function (err, results) {
-                if (err) {
-                    cb(err);
-                }
-                var reservations = {};
-                _.each(results, function (r) {
-                    reservations = r.list;
-                });
-
-                console.log("refine: " + reservations.length);
-
-                cb(null, reservations);
-            });
-        }
+        //res.render('reservations', {'reservations': reservations});
     });
 });
 
