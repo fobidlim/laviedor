@@ -9,6 +9,7 @@ var co = require('co');
 var error = require('./error');
 var reservationModel = require('../model/reservation');
 var async = require('async');
+var util = require('../lib/util');
 var _ = require('underscore');
 var router = express.Router();
 
@@ -61,66 +62,60 @@ router.get('/list', function (req, res, next) {
 });
 
 // 예약 넣기
-router.post('/book', function (req, res) {
+router.post('/', function (req, res) {
     var body = req.body;
 
     var name = body['name'];
     var startDate = body['startDate'];
     var endDate = body['endDate'];
     var amount = body['amount'];
-
-    var details = [];
-
-    for (var i = 0; i < amount; i++) {
-        details.push({
-            name: body['name'],
-            price: body['price'],
-            type: body['type']
-        });
-    }
-
     var note = body['note'];
     var isCheckedIn = body['isCheckedIn'];
-    var isCheckedOut = body['isCheckedOut'];
+    var isCheckedOut = false;
     var isCleaned = body['isCleaned'];
-    var isRemoved = body['isRemoved'];
+    var isRemoved = false;
 
-//if (!loginId) {
-//    res.json(error.getError('INVALID_PARAMS'));
-//    return;
-//}
+    for (var i = 0; i < amount; i++) {
+        var roomNumber = body['roomNumber'];
+        var price = body['price'];
+        var type = body['type'];
 
-    var reservationForm = {
-        name: name,
-        startDate: startDate,
-        endDate: endDate,
-        amount: amount,
-        details: details,
-        note: note,
-        isCheckedId: isCheckedIn,
-        isCheckedOut: isCheckedOut,
-        isCleaned: isCleaned,
-        isRemoved: isRemoved
-    };
+        var reservationForm = {
+            name: name,
+            roomNumber: roomNumber,
+            price: price,
+            type: type,
+            startDate: startDate,
+            endDate: endDate,
+            amount: amount,
+            note: note,
+            isCheckedId: isCheckedIn,
+            isCheckedOut: isCheckedOut,
+            isCleaned: isCleaned,
+            isRemoved: isRemoved
+        };
 
-    co(function * ()
-    {
-        var reservation = yield createReservation(reservationForm);
-        res.json(error.getSucceed({
-            ok: true
-        }));
-        return reservation;
-    }
+        co(function * ()
+        {
+            var reservation = yield createReservation(reservationForm);
+            if (i == amount - 1) {
+                res.json(error.getSucceed({
+                    ok: true
+                }));
+                return reservation;
+            }
+        }
     ).
-    catch(function (e) {
-        console.error(e);
-        res.json(error.getError('ERROR'));
-    });
+        catch(function (e) {
+            console.error(e);
+            res.json(error.getError('ERROR'));
+        });
+    }
 });
 
 function createReservation(reservation) {
     return new Promise(function (resolve, reject) {
-        reservationModel.create(reservation, function (err, insert) {
+        reservationModel.Model.create(reservation, function(err, insert) {
             if (err) {
                 reject(err);
             } else {

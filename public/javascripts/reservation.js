@@ -27,51 +27,30 @@ reservationUtils.func.createReservation = function () {
 
     var reservation = {
         name: $('#name').val(),
+        roomNumber: $('#roomNumber').val(),
+        price: $('#price').val(),
+        type: $('#type').val(),
         startDate: $('#startDate').val(),
         endDate: $('#endDate').val(),
         amount: $('#amount').val(),
-        price: $('#price').val(),
         note: $('#note').val(),
         isCheckedIn: $('#isCheckedIn').is(":checked"),
         isCheckedOut: $('#isCheckedOut').is(":checked"),
         isCleaned: $('#isCleaned').is(":checked"),
-        isRemoved: $('#isRemoved').is(":checked")
+        isRemoved: false
     };
 
-    reservationUtils.net.book({
-        params: reservation,
-        success: function (res) {
-
-            if (res) {
-
-                if (res.ok) {
-                    location.replace('/');
-                } else {
-                    //switch (res.codeno) {
-                    //    case 4001 :
-                    //        alert('부적절한 정보가 입력되었습니다.');
-                    //        break;
-                    //    case 4104 :
-                    //        alert('인증된 이메일이 아닙니다.\n정상적인 경로로 회원가입 해주세요.');
-                    //        break;
-                    //    default :
-                    //        alert('네트워크 문제로 통신에 실패했습니다.');
-                    //        break;
-                    //
-                    //}
-                }
-
-            } else {
-                alert('네트워크 문제로 통신에 실패했습니다.');
-            }
-
+    $.ajax({
+        url: "/reservations",
+        type: "POST",
+        data: JSON.stringify(reservation),
+        dataType: "json",
+        success: function (result) {
+            console.log(result);
+            location.href('reservations');
         },
-        error: function (err) {
-
-            alert('네트워크 문제로 통신에 실패했습니다.');
-
+        error: function (result) {
+            console.log(result);
         }
     });
-
-
 };

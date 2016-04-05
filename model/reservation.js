@@ -6,8 +6,8 @@ var async = require('async');
 var mongoose = require('../lib/mongoose');
 var util = require('../lib/util');
 
-var Reservation = mongoose.Reservation;
-exports.Reservation = Reservation;
+var Reservation = mongoose.Model;
+exports.Model = Reservation;
 
 
 function getAllReservations(cb) {
@@ -29,4 +29,11 @@ function getReservations(query, options, cb) {
     });
 }
 
+function createReservation(reservation, cb) {
+    Reservation.create(reservation, function() {
+        cb(err, reservation);
+    });
+}
+
 exports.getReservations = getAllReservations;
+exports.createReservation = createReservation;

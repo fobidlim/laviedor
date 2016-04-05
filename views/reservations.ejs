@@ -40,32 +40,11 @@
 
 <script>
     $(function () {
-        $.get('/reservations/list', function (res) {
-            console.log('code: ' + res.codeno);
-            console.log(res);
-
+        $.get('list', function (res) {
             for (var i in res.data.reservations) {
-                console.log('roomNumber: '+res.data.reservations[i].roomNumber);
-
                 $('#roomNumber-' + res.data.reservations[i].roomNumber).text(res.data.reservations[i].name);
             }
         });
-
-//        $.ajax({
-//            method: "GET",
-//            url: "reservations/list",
-//            dataType: 'json',
-//            success: function (results) {
-//                console.log('code: ' + results.code);
-//                console.log('results: ' + results);
-//
-//                for (var i in results.data) {
-//                    $('#roomNumber-' + results.data[i].roomNumber).text(results.data[i].name);
-//                }
-//            }, error: function (err) {
-//                alert(err);
-//            }
-//        });
     });
 
 </script>
@@ -105,7 +84,7 @@
                         <td onclick="openModal(<%= roomNumber %>);">
                             <%= roomNumber %>
                         </td>
-                        <td id="roomNumber-<%= roomNumber %>" onclick="openModal();">
+                        <td id="roomNumber-<%= roomNumber %>" onclick="openModal(<%= roomNumber %>);">
                         </td>
                         <% }
                         } %>
@@ -143,7 +122,8 @@
                         <!-- Project Details Go Here -->
                         <h2 id="modalRoomNumber">Room Number</h2>
 
-                        <form onsubmit="reservationUtils.func.createReservation();">
+                        <form method="post"
+                              onsubmit="reservationUtils.func.createReservation();">
                             <div class="form-group">
                                 <input id="name" class="form-control" type="text" name="name" placeholder="이름" required
                                        data-validation-required-message="Please enter room name."/>
@@ -175,7 +155,7 @@
                                 <p class="help-block text-danger"></p>
                             </div>
                             <div class="form-group">
-                                <input id="number" class="form-control" type="number" name="number"
+                                <input id="roomNumber" class="form-control" type="number" name="roomNumber"
                                        placeholder="번호 (개수에 따라 번호 입력 란 증가되도록)" required
                                        data-validation-required-message="Please enter room number"/>
 
@@ -187,7 +167,7 @@
                             <div class="clearfix"></div>
 
                             <div class="col-lg-12 text-center">
-                                <input class="btn btn-primary" type="submit" data-dismiss="modal"/>
+                                <input class="btn btn-primary" type="submit"/>
                             </div>
                         </form>
                     </div>
