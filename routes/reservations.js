@@ -1,11 +1,15 @@
 /**
  * Created by Fobid on 2016. 4. 3..
  */
+var warn = global.warn;
 
 var express = require('express');
 var mongoose = require('../lib/mongoose');
 var co = require('co');
+var error = require('./error');
 var reservationModel = require('../model/reservation');
+var async = require('async');
+var _ = require('underscore');
 var router = express.Router();
 
 // 모든 예약 정보 가져오기
@@ -14,42 +18,57 @@ router.get('/', function (req, res, next) {
     var query;
     var options = {};
 
-    reservationModel.getReservations(query, options, function (err, reservation) {
+    reservationModel.getReservations(query, options, function (err, reservations) {
         if (err) {
             warn(err);
             res.json(error.getError());
             return;
         }
-        refine(reservation, function (err, reservations) {
-            if (err) {
-                warn(err);
-                res.json(error.getError());
-                return;
-            }
-            res.json(error.getSucceed({
-                reservations: reservations
-            }));
-        });
+
+        if (err) {
+            warn(err);
+            res.json(error.getError());
+            return;
+        }
+
+        //console.log(reservations);
+        //
+        res.render('reservations', {'reservations': reservations});
+
+        //res.json(error.getSucceed({
+        //    reservations: reservations
+        //}));
+
+        //refine(reservation, function (err, reservations) {
+        //    if (err) {
+        //        warn(err);
+        //        res.json(error.getError());
+        //        return;
+        //    }
+        //
+        //    //return res.render('reservations', {reservations: reservations});
+        //
+        //    res.json(error.getSucceed({
+        //        reservations: reservations
+        //    }));
+        //});
 
         function refine(reservation, cb) {
-            async.parallel(function (err, results) {
+            async.parallel(null, function (err, results) {
                 if (err) {
                     cb(err);
                 }
-                var reservations = _.map(reservation, function (r) {
-                    r.name = "";
-                    r.startDate = "";
-                    r.endDate = "";
-                    r.amount = 0;
+                var reservations = {};
+                _.each(results, function (r) {
+                    reservations = r.list;
                 });
-                return r;
+
+                console.log("refine: " + reservations.length);
+
+                cb(null, reservations);
             });
-            cb(null, reservation);
         }
     });
-
-    //
-    res.render('reservations', {title: 'Express'});
 });
 
 // 예약 넣기

@@ -32,13 +32,8 @@
     <![endif]-->
     <script src="/javascripts/reservation.js"></script>
 </head>
-
 <body>
 <% include template/top.ejs %>
-
-<script>
-
-</script>
 
 <div class="container-fluid">
     <div class="row">
@@ -76,7 +71,7 @@
                             <%= floor + tempRoomNumber %>
                         </td>
                         <td onclick="openModal();">
-                            이름
+                            <%= reservations[0].name %>
                         </td>
                         <% }
                         } %>

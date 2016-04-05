@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 global.config = require('../config/default.json');
+global.log = console.log;
+global.warn = console.error;
 
 /**
  * Module dependencies.

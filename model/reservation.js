@@ -11,12 +11,10 @@ exports.Reservation = Reservation;
 
 
 function getReservations(query, options, cb) {
-    var queryData = Reservation.find(query);
-    if (options.sort) {
-        queryData.sort(options.sort);
-    }
-    queryData.lean().exec(function (err, list) {
-        cb(err, err ? null : list);
+    var queryData = Reservation.find();
+
+    queryData.lean().exec(function (err, reservations) {
+        cb(err, err ? null : reservations);
     });
 }
 
