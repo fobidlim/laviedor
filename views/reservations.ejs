@@ -40,7 +40,7 @@
 
 <script>
     $(function () {
-        $.get('list', function (res) {
+        $.get('reservations/list', function (res) {
             for (var i in res.data.reservations) {
                 $('#roomNumber-' + res.data.reservations[i].roomNumber).text(res.data.reservations[i].name);
             }
@@ -122,8 +122,8 @@
                         <!-- Project Details Go Here -->
                         <h2 id="modalRoomNumber">Room Number</h2>
 
-                        <form method="post"
-                              onsubmit="reservationUtils.func.createReservation();">
+                        <!--<form action="/reservations/list" method="post"-->
+                              <!--onsubmit="reservationUtils.func.createReservation();">-->
                             <div class="form-group">
                                 <input id="name" class="form-control" type="text" name="name" placeholder="이름" required
                                        data-validation-required-message="Please enter room name."/>
@@ -167,9 +167,10 @@
                             <div class="clearfix"></div>
 
                             <div class="col-lg-12 text-center">
-                                <input class="btn btn-primary" type="submit"/>
+                                <!--<input class="btn btn-primary" type="submit"/>-->
+                                <input class="btn btn-primary" type="button" onclick="reservationUtils.func.createReservation();"/>
                             </div>
-                        </form>
+                        <!--</form>-->
                     </div>
                 </div>
             </div>

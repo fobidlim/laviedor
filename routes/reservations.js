@@ -75,10 +75,18 @@ router.post('/book', function (req, res) {
     var isCleaned = body['isCleaned'];
     var isRemoved = false;
 
+    console.log("name: " + name);
+    console.log("startDate: " + startDate);
+    console.log("endDate: " + endDate);
+
+
     for (var i = 0; i < amount; i++) {
         var roomNumber = body['roomNumber'];
         var price = body['price'];
         var type = body['type'];
+
+        console.log("roomNumber: " + roomNumber);
+        console.log("price: " + price);
 
         var reservationForm = {
             name: name,
@@ -95,10 +103,26 @@ router.post('/book', function (req, res) {
             isRemoved: isRemoved
         };
 
+        console.log("ready to create reservation");
+        //reservationModel.Model.createReservation(reservationForm, function (err, reservation) {
+        //    if (err) {
+        //        //reject(err);
+        //        console.log("create error");
+        //    } else {
+        //        if (i == amount) {
+        //            res.json(error.getSucceed({
+        //                ok: true
+        //            }));
+        //        }
+        //        //resolve(util.refine(insert._doc));
+        //        console.log("create success");
+        //    }
+        //});
+
         co(function * ()
         {
             var reservation = yield createReservation(reservationForm);
-            if (i == amount - 1) {
+            if (i == amount) {
                 res.json(error.getSucceed({
                     ok: true
                 }));
@@ -115,11 +139,13 @@ router.post('/book', function (req, res) {
 
 function createReservation(reservation) {
     return new Promise(function (resolve, reject) {
-        reservationModel.Model.create(reservation, function(err, insert) {
+        reservationModel.Model.create(reservation, function (err, insert) {
             if (err) {
                 reject(err);
+                console.log("create error");
             } else {
                 resolve(util.refine(insert._doc));
+                console.log("create success");
             }
         });
     });

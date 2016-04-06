@@ -30,7 +30,8 @@ function getReservations(query, options, cb) {
 }
 
 function createReservation(reservation, cb) {
-    Reservation.create(reservation, function() {
+    console.log("createReservation: " + JSON.stringify(reservation));
+    Reservation.insert(reservation, function (err, reservation) {
         cb(err, reservation);
     });
 }

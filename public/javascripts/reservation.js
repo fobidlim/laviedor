@@ -43,14 +43,18 @@ reservationUtils.func.createReservation = function () {
     $.ajax({
         url: "/reservations/book",
         type: "POST",
-        data: JSON.stringify(reservation),
+        data: reservation,
         dataType: "json",
         success: function (result) {
-            console.log(result);
-            location.href('reservations');
+            console.log("resert: " + result);
+            location.replace('/reservations');
         },
-        error: function (result) {
-            console.log(result);
+        error: function (err) {
+            if (!err) {
+                console.log("error: " + JSON.parse(err));
+            } else {
+                console.log("error: ?");
+            }
         }
     });
 };
