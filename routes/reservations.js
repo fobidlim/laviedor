@@ -62,7 +62,7 @@ router.get('/list', function (req, res, next) {
 });
 
 // 예약 넣기
-router.post('/', function (req, res) {
+router.post('/book', function (req, res) {
     var body = req.body;
 
     var name = body['name'];
