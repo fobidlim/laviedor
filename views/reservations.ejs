@@ -9,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="/images/favicon.ico">
 
-    <title>Dashboard Template for Bootstrap</title>
+    <title>La Vie D'or</title>
 
     <!-- Bootstrap core CSS -->
     <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,8 +41,10 @@
 <script>
     $(function () {
         $.get('reservations/list', function (res) {
-            for (var i in res.data.reservations) {
-                $('#roomNumber-' + res.data.reservations[i].roomNumber).text(res.data.reservations[i].name);
+            var reservations = res.data.reservations;
+
+            for (var i in reservations) {
+                $('#roomNumber-' + reservations[i].room.number).text(reservations[i].name);
             }
         });
     });
@@ -100,8 +102,31 @@
 </div>
 
 <script>
+    $(document).ready(function () {
+        $('#amount').change(function () {
+            //noinspection JSJQueryEfficiency
+            var roomNumber = $("#modalRoomNumber").text();
+            var amount = $('#amount option:selected').val();
+
+            $('#roomNumbers').html("");
+            $('#prices').html("");
+
+            for (var i = 0; i < amount; i++) {
+                $('#roomNumbers').append("<input class='form-control' type='number' name='roomNumber'" +
+                        " value='" + (i == 0 ? roomNumber : "") + "' placeholder='번호' required "
+                        + "data-validation-required-message='Please enter room number'/>"
+                        + "<p class='help-block text-danger'></p>");
+
+                $('#prices').append("<input class='form-control' type='number' name='price'"
+                        + " placeholder='단가' required " + +"data-validation-required-message='Please enter room price'/>"
+                        + "<p class='help-block text-danger'></p>");
+            }
+        });
+    });
+
     function openModal(roomNumber) {
         $("#modalRoomNumber").text(roomNumber);
+        $('#roomNumber').val(roomNumber);
         $("#inputModal").modal("show");
     }
 </script>
@@ -119,58 +144,54 @@
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2">
                     <div class="modal-body">
-                        <!-- Project Details Go Here -->
-                        <h2 id="modalRoomNumber">Room Number</h2>
+                        <h2 id="modalRoomNumber"></h2>
 
-                        <!--<form action="/reservations/list" method="post"-->
-                              <!--onsubmit="reservationUtils.func.createReservation();">-->
-                            <div class="form-group">
-                                <input id="name" class="form-control" type="text" name="name" placeholder="이름" required
-                                       data-validation-required-message="Please enter room name."/>
+                        <div class="form-group">
+                            <input id="name" class="form-control" type="text" name="name" placeholder="이름" required
+                                   data-validation-required-message="Please enter room name."/>
 
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="form-group">
-                                <input id="startDate" class="form-control" type="date" placeholder="체크인" required
-                                       data-validation-required-message="Please enter check-in date"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="amount" name="amount">
+                                <% for(var i = 0; i < 100; i++) { %>
+                                <option><%= i + 1 %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div id="roomNumbers" class="form-group">
+                            <input id="roomNumber" class="form-control" type="number" name="roomNumber"
+                                   placeholder="번호" required
+                                   data-validation-required-message="Please enter room number"/>
 
-                                <p class="help-block text-danger"></p>
-                                <input id="endDate" class="form-control" type="date" placeholder="체크아웃" required
-                                       data-validation-required-message="Please enter check-out date">
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div id="prices" class="form-group">
+                            <input id="price" class="form-control" type="number" name="price" placeholder="단가"
+                                   required
+                                   data-validation-required-message="Please enter room price"/>
 
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="form-group">
-                                <input id="price" class="form-control" type="number" name="price" placeholder="단가"
-                                       required
-                                       data-validation-required-message="Please enter room price"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <input id="startDate" class="form-control" type="date" placeholder="체크인" required
+                                   data-validation-required-message="Please enter check-in date"/>
 
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="form-group">
-                                <input id="amount" class="form-control" type="number" name="amount" placeholder="개수"
-                                       required
-                                       data-validation-required-message="Please enter room amount"/>
+                            <p class="help-block text-danger"></p>
+                            <input id="endDate" class="form-control" type="date" placeholder="체크아웃" required
+                                   data-validation-required-message="Please enter check-out date">
 
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="form-group">
-                                <input id="roomNumber" class="form-control" type="number" name="roomNumber"
-                                       placeholder="번호 (개수에 따라 번호 입력 란 증가되도록)" required
-                                       data-validation-required-message="Please enter room number"/>
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="note" class="form-control" name="note" placeholder="특이사항"></textarea>
+                        </div>
+                        <div class="clearfix"></div>
 
-                                <p class="help-block text-danger"></p>
-                            </div>
-                            <div class="form-group">
-                                <textarea id="note" class="form-control" name="note" placeholder="특이사항"></textarea>
-                            </div>
-                            <div class="clearfix"></div>
-
-                            <div class="col-lg-12 text-center">
-                                <!--<input class="btn btn-primary" type="submit"/>-->
-                                <input class="btn btn-primary" type="button" onclick="reservationUtils.func.createReservation();"/>
-                            </div>
-                        <!--</form>-->
+                        <div class="form-group text-center">
+                            <input class="btn btn-primary" type="button" value="Submit"
+                                   onclick="reservationUtils.func.createReservation();"/>
+                        </div>
                     </div>
                 </div>
             </div>

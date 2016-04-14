@@ -6,8 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
 var reservations = require('./routes/reservations');
+var rooms = require('./routes/rooms');
+var users = require('./routes/users');
 
 require('./lib/mongoose').connect(config.mongoURL);
 
@@ -28,8 +29,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 app.use('/reservations', reservations);
+app.use('/rooms', rooms);
+app.use('/users', users);
 
 app.use(function (req, res, next) {
     console.log("req body: " + req.body); // populated!

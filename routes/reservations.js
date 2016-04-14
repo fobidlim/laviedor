@@ -65,46 +65,29 @@ router.get('/list', function (req, res, next) {
 router.post('/book', function (req, res) {
     var body = req.body;
 
+    console.log('/book request: ' + JSON.stringify(body));
+
     var name = body['name'];
+    var rooms = JSON.parse(body['rooms']);
     var startDate = body['startDate'];
     var endDate = body['endDate'];
-    var amount = body['amount'];
     var note = body['note'];
     var isCheckedIn = body['isCheckedIn'];
-    var isCheckedOut = false;
-    var isCleaned = body['isCleaned'];
-    var isRemoved = false;
 
-    console.log("name: " + name);
-    console.log("startDate: " + startDate);
-    console.log("endDate: " + endDate);
-
-
-    for (var i = 0; i < amount; i++) {
-        var roomNumber = body['roomNumber'];
-        var price = body['price'];
-        var type = body['type'];
-
-        console.log("roomNumber: " + roomNumber);
-        console.log("price: " + price);
-
-        var reservationForm = {
+    for (var i = 0; i < rooms.length; i++) {
+        var reservation = {
             name: name,
-            roomNumber: roomNumber,
-            price: price,
-            type: type,
+            room: rooms[i],
             startDate: startDate,
             endDate: endDate,
-            amount: amount,
             note: note,
-            isCheckedId: isCheckedIn,
-            isCheckedOut: isCheckedOut,
-            isCleaned: isCleaned,
-            isRemoved: isRemoved
+            isCheckedIn: isCheckedIn,
+            isCheckedOut: false,
+            isRemoved: false
         };
 
-        console.log("ready to create reservation");
-        //reservationModel.Model.createReservation(reservationForm, function (err, reservation) {
+
+        //reservationModel.Reservation.createReservation(reservationForm, function (err, reservation) {
         //    if (err) {
         //        //reject(err);
         //        console.log("create error");
@@ -121,12 +104,12 @@ router.post('/book', function (req, res) {
 
         co(function * ()
         {
-            var reservation = yield createReservation(reservationForm);
-            if (i == amount) {
+            var result = yield createReservation(reservation);
+            if (i == rooms.length) {
                 res.json(error.getSucceed({
                     ok: true
                 }));
-                return reservation;
+                return result;
             }
         }
     ).
@@ -139,7 +122,7 @@ router.post('/book', function (req, res) {
 
 function createReservation(reservation) {
     return new Promise(function (resolve, reject) {
-        reservationModel.Model.create(reservation, function (err, insert) {
+        reservationModel.Reservation.create(reservation, function (err, insert) {
             if (err) {
                 reject(err);
                 console.log("create error");

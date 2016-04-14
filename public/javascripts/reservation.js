@@ -1,5 +1,5 @@
 /**
- * Created by Fobid on 2016. 4. 4..
+ * Created by Fobid on 2016. 4. 15..
  */
 (typeof global == 'undefined' ? window : global).reservationUtils = reservationUtils = {
 
@@ -25,18 +25,39 @@ reservationUtils.func.createReservation = function () {
     //    return;
     //}
 
+    var rooms = [];
+    var amount = $('#amount option:selected').val();
+    var roomNumbers = [];
+    var prices = [];
+
+    $("input[name='roomNumber']").each(function () {
+        roomNumbers.push($(this).val());
+    });
+    $("input[name='price']").each(function () {
+        prices.push($(this).val());
+    });
+
+    for (var i = 0; i < amount; i++) {
+        var room = {
+            number: roomNumbers[i],
+            type: {
+                name: "", option: ""
+            },
+            price: prices[i],
+            isAvailable: true,
+            isCleaned: true
+        };
+        rooms.push(room);
+    }
+
     var reservation = {
         name: $('#name').val(),
-        roomNumber: $('#roomNumber').val(),
-        price: $('#price').val(),
-        type: $('#type').val(),
+        rooms: JSON.stringify(rooms),
         startDate: $('#startDate').val(),
         endDate: $('#endDate').val(),
-        amount: $('#amount').val(),
         note: $('#note').val(),
         isCheckedIn: $('#isCheckedIn').is(":checked"),
         isCheckedOut: $('#isCheckedOut').is(":checked"),
-        isCleaned: $('#isCleaned').is(":checked"),
         isRemoved: false
     };
 
