@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/images/favicon.ico">
+
+    <title>La Vie D'or</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="/assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/stylesheets/dashboard.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="/assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="/javascripts/reservation.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/js/vendor/jquery.min.js"><\/script>')</script>
+</head>
+<body>
+<% include template/top.ejs %>
+
+<script>
+    $(function () {
+        $.get('reservations/list', function (res) {
+            var reservations = res.data.reservations;
+
+            for (var i in reservations) {
+                $('#roomNumber-' + reservations[i].room.number).text(reservations[i].name);
+            }
+        });
+    });
+
+</script>
+<div class="container-fluid">
+    <div class="row">
+        <% include template/left.ejs %>
+
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+            <h1 class="page-header">Dashboard</h1>
+
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <% for (var floor = 5; floor <= 19; floor++) {
+                            if (floor == 13) {
+                                continue;
+                            } %>
+                        <th colspan="2" align="center"><%= floor %>F</th>
+                        <% } %>
+                    </tr>
+                    </thead>
+                    <% for (var number = 1; number <= 26; number++) { %>
+                    <tr>
+                        <% for (var floor = 5; floor <= 19; floor++) {
+                            var tempNumber = number < 10 ? "0" + number : "" + number;
+                            var roomNumber = floor + tempNumber + "";
+
+                            if (floor == 13) {
+                                continue;
+                            }
+                        if (((floor == 5 || floor == 19) && number > 17)
+                                || (floor >= 7 && floor <= 18) && number > 19) { %>
+                        <td></td>
+                        <td></td>
+                        <% } else { %>
+                        <td onclick="openModal(<%= roomNumber %>);">
+                            <%= roomNumber %>
+                        </td>
+                        <td id="roomNumber-<%= roomNumber %>" onclick="openModal(<%= roomNumber %>);">
+                        </td>
+                        <% }
+                        } %>
+                    </tr>
+                    <% } %>
+                </table>
+            </div>
+            <h2 class="sub-header">Section title</h2>
+
+            <% include template/bottom.ejs %>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#amount').change(function () {
+            //noinspection JSJQueryEfficiency
+            var roomNumber = $("#modalRoomNumber").text();
+            var amount = $('#amount option:selected').val();
+
+            $('#roomNumbers').html("");
+            $('#prices').html("");
+
+            for (var i = 0; i < amount; i++) {
+                $('#roomNumbers').append("<input class='form-control' type='number' name='roomNumber'" +
+                        " value='" + (i == 0 ? roomNumber : "") + "' placeholder='번호' required "
+                        + "data-validation-required-message='Please enter room number'/>"
+                        + "<p class='help-block text-danger'></p>");
+
+                $('#prices').append("<input class='form-control' type='number' name='price'"
+                        + " placeholder='단가' required " + +"data-validation-required-message='Please enter room price'/>"
+                        + "<p class='help-block text-danger'></p>");
+            }
+        });
+    });
+
+    function openModal(roomNumber) {
+        $("#modalRoomNumber").text(roomNumber);
+        $('#roomNumber').val(roomNumber);
+        $("#inputModal").modal("show");
+    }
+</script>
+
+<!-- Input Modal  -->
+<div class="input-modal modal fade" id="inputModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-content">
+        <div class="close-modal" data-dismiss="modal">
+            <div class="lr">
+                <div class="rl">
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="modal-body">
+                        <h2 id="modalRoomNumber"></h2>
+
+                        <div class="form-group">
+                            <input id="name" class="form-control" type="text" name="name" placeholder="이름" required
+                                   data-validation-required-message="Please enter room name."/>
+
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" id="amount" name="amount">
+                                <% for(var i = 0; i < 100; i++) { %>
+                                <option><%= i + 1 %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div id="roomNumbers" class="form-group">
+                            <input id="roomNumber" class="form-control" type="number" name="roomNumber"
+                                   placeholder="번호" required
+                                   data-validation-required-message="Please enter room number"/>
+
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div id="prices" class="form-group">
+                            <input id="price" class="form-control" type="number" name="price" placeholder="단가"
+                                   required
+                                   data-validation-required-message="Please enter room price"/>
+
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <input id="startDate" class="form-control" type="date" placeholder="체크인" required
+                                   data-validation-required-message="Please enter check-in date"/>
+
+                            <p class="help-block text-danger"></p>
+                            <input id="endDate" class="form-control" type="date" placeholder="체크아웃" required
+                                   data-validation-required-message="Please enter check-out date">
+
+                            <p class="help-block text-danger"></p>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="note" class="form-control" name="note" placeholder="특이사항"></textarea>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="form-group text-center">
+                            <input class="btn btn-primary" type="button" value="Submit"
+                                   onclick="reservationUtils.func.createReservation();"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Bootstrap core JavaScript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="/dist/js/bootstrap.min.js"></script>
+<!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+<script src="/assets/js/vendor/holder.min.js"></script>
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<script src="/assets/js/ie10-viewport-bug-workaround.js"></script>
+</body>
+</html>

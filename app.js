@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
+var dashboard = require('./routes/dashboard');
 var reservations = require('./routes/reservations');
 var rooms = require('./routes/rooms');
 var users = require('./routes/users');
@@ -27,14 +28,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'bower_components')));
+app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'js')));
 
 app.use('/', routes);
+app.use('/dashboard', dashboard);
 app.use('/reservations', reservations);
 app.use('/rooms', rooms);
 app.use('/users', users);
 
 app.use(function (req, res, next) {
-    console.log("req body: " + req.body); // populated!
     next();
 });
 

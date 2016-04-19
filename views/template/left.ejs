@@ -1,7 +1,16 @@
+<script>
+    $(document).ready(function () {
+        $('.nav-sidebar li').click(function () {
+            $('#nav-sidebar li').removeClass('active');
+            $(this).addClass('active');
+        });
+    });
+</script>
+
 <div class="col-sm-3 col-md-2 sidebar">
     <ul class="nav nav-sidebar">
-        <li class="active"><a href="/reservations">Dashboard<span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Book</a></li>
+        <li class="active"><a href="/dashboard">Dashboard<span class="sr-only">(current)</span></a></li>
+        <li><a href="/reservations">Book</a></li>
         <li><a href="#">Invoice</a></li>
     </ul>
     <ul class="nav nav-sidebar" style="visibility: hidden">
