@@ -51,6 +51,7 @@ reservationUtils.func.createReservation = function () {
     }
 
     var reservation = {
+        title: $('#title').val(),
         name: $('#name').val(),
         rooms: JSON.stringify(rooms),
         startDate: $('#startDate').val(),
@@ -68,7 +69,7 @@ reservationUtils.func.createReservation = function () {
         dataType: "json",
         success: function (result) {
             console.log("resert: " + result);
-            location.replace('/reservations');
+            location.replace('/dashboard');
         },
         error: function (err) {
             if (!err) {

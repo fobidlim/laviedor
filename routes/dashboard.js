@@ -33,7 +33,7 @@ router.get('/', function (req, res, next) {
     //    }));
     //});
 
-    res.render('reservations');
+    res.render('dashboard');
 
 });
 
@@ -67,6 +67,7 @@ router.post('/book', function (req, res) {
 
     console.log('/book request: ' + JSON.stringify(body));
 
+    var title = body['title'];
     var name = body['name'];
     var rooms = JSON.parse(body['rooms']);
     var startDate = body['startDate'];
@@ -76,8 +77,14 @@ router.post('/book', function (req, res) {
 
     for (var i = 0; i < rooms.length; i++) {
         var reservation = {
+            title: title,
             name: name,
+            price: rooms[i].price,
             room: rooms[i],
+            type: {
+                name: "",
+                option: ""
+            },
             startDate: startDate,
             endDate: endDate,
             note: note,
