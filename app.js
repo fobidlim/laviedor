@@ -10,6 +10,7 @@ var dashboard = require('./routes/dashboard');
 var reservations = require('./routes/reservations');
 var rooms = require('./routes/rooms');
 var users = require('./routes/users');
+var tables = require('./routes/tables');
 
 require('./lib/mongoose').connect(config.mongoURL);
 
@@ -37,6 +38,7 @@ app.use('/dashboard', dashboard);
 app.use('/reservations', reservations);
 app.use('/rooms', rooms);
 app.use('/users', users);
+app.use('/tables', tables);
 
 app.use(function (req, res, next) {
     next();
